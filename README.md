@@ -1,27 +1,3 @@
-Video Recommender API (FastAPI)
-
-Setup
-1) Create a virtual environment and install dependencies:
-   - python -m venv .venv
-   - .venv\\Scripts\\activate  (Windows PowerShell)
-   - pip install -r requirements.txt
-
-2) Run the API server:
-   - uvicorn app.main:app --reload
-
-Data files
-- data/user_profiles.json will be created automatically on first write.
-- Optionally add data/videos_by_cluster.json with a structure like:
-  {
-    "0": [101, 102, 103],
-    "1": [201, 202]
-  }
-
-Endpoints
-- POST /users/
-- GET /users/{username}/
-- POST /users/{username}/interaction/
-- GET /users/{username}/recommendations/
 # Short Video Recommendation System
 
 This project is a content-based recommendation system that suggests short videos to users. It leverages unsupervised machine learning to group similar videos into clusters and recommends popular items from a video's own cluster.
