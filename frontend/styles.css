@@ -1,0 +1,268 @@
+/* General Setup */
+body, html {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background-color: #121212;
+  color: #fff;
+  overflow: hidden;
+}
+
+#app {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+/* View Management */
+.view {
+  display: none;
+  width: 100%;
+  height: 100%;
+}
+.view.active {
+  display: flex;
+}
+
+/* Auth Section */
+#auth-section {
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+.auth-card {
+  background: #1e1e1e;
+  padding: 2rem 3rem;
+  border-radius: 12px;
+  text-align: center;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+.auth-card h1 {
+  margin-top: 0;
+}
+#auth-form input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 1rem;
+  border: 1px solid #444;
+  background: #2a2a2a;
+  color: #fff;
+  border-radius: 8px;
+  box-sizing: border-box;
+}
+#auth-form button {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  background: #1e90ff;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+#auth-form button:hover {
+  background: #0073e6;
+}
+.error {
+  color: #ff4d4d;
+  margin-top: 1rem;
+  height: 1.2em;
+}
+
+/* Reels Section */
+#reels-section {
+  flex-direction: column;
+  max-width: 420px; /* Mobile-first design */
+  margin: 0 auto;
+  position: relative;
+  background: #000;
+}
+.topbar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.7), transparent);
+  z-index: 10;
+}
+.brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+#logout-btn {
+  background: none;
+  border: none;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.reel-container {
+  flex-grow: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+.reel-card {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  position: absolute;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.reel-card.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+.reel-card video {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+.reel-meta {
+  position: absolute;
+  bottom: 80px; /* Above controls */
+  left: 10px;
+  color: white;
+  background: rgba(0,0,0,0.5);
+  padding: 5px 10px;
+  border-radius: 5px;
+  font-size: 0.9rem;
+}
+.loading-text, .empty-text {
+  font-size: 1.2rem;
+  color: #aaa;
+}
+
+
+/* Controls */
+.controls {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 1rem;
+  background: #000;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10;
+}
+.controls button {
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  font-size: 1.2rem;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+.controls button:hover {
+  background-color: #444;
+}
+#like-btn {
+  color: #ff4d4d;
+  font-size: 1.5rem;
+}
+
+/* Mute toggle button */
+.mute-btn {
+  position: absolute;
+  right: 10px;
+  bottom: 70px;
+  background: #2a2a2a;
+  border: 1px solid #444;
+  color: white;
+  font-size: 1rem;
+  border-radius: 10px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+/* Comments panel */
+.comments-panel {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  background: #1e1e1e;
+  border-top: 1px solid #444;
+  max-height: 50%;
+  transform: translateY(100%);
+  transition: transform .25s ease;
+  z-index: 20;
+}
+.comments-panel:not(.hidden) {
+  transform: translateY(0%);
+}
+.comments-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-bottom: 1px solid #444;
+}
+.comments-list {
+  padding: 10px 12px;
+  max-height: 40vh;
+  overflow-y: auto;
+  display: grid;
+  gap: 8px;
+}
+.comment-form {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  border-top: 1px solid #444;
+}
+.comment-form input {
+  flex: 1;
+  padding: 10px 12px;
+  background: #2a2a2a;
+  color: #fff;
+  border: 1px solid #444;
+  border-radius: 8px;
+}
+.comment-form button {
+  padding: 10px 14px;
+  background: #1e90ff;
+  border: none;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+/* Like heart animation */
+.like-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.6);
+  font-size: 120px;
+  color: #ff4d4d;
+  pointer-events: none;
+  opacity: 0.9;
+  animation: heart-pop 1s ease forwards;
+  z-index: 15;
+}
+
+@keyframes heart-pop {
+  0% { transform: translate(-50%, -50%) scale(0.6); opacity: 0.9; }
+  60% { transform: translate(-50%, -55%) scale(1.2); opacity: 1; }
+  100% { transform: translate(-50%, -60%) scale(0.8); opacity: 0; }
+}

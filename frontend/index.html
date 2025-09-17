@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reels Recommender</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <div id="app">
+        <section id="auth-section" class="view">
+            <div class="auth-card">
+                <h1>Welcome</h1>
+                <p>Enter a username to sign up / log in</p>
+                <form id="auth-form">
+                    <input id="username-input" type="text" placeholder="Username" required />
+                    <button type="submit">Continue</button>
+                </form>
+                <div id="auth-error" class="error"></div>
+            </div>
+        </section>
+
+        <section id="reels-section" class="view">
+            <header class="topbar">
+                <div class="brand">Reels</div>
+                <div class="user">
+                    <span id="current-username"></span>
+                    <button id="logout-btn" title="Log out">⎋</button>
+                </div>
+            </header>
+
+            <div id="reel-container" class="reel-container">
+                </div>
+
+            <div class="controls">
+                <button id="prev-btn" title="Previous (Up Arrow)">▲</button>
+                <button id="like-btn" title="Like & Next (L key)">❤</button>
+                <button id="comments-btn" title="Show comments">💬</button>
+                <button id="next-btn" title="Next (Down Arrow)">▼</button>
+            </div>
+            <button id="mute-toggle" class="mute-btn" title="Toggle sound">🔇</button>
+            <div id="comments-panel" class="comments-panel hidden">
+                <div class="comments-header">
+                    <span>Comments</span>
+                    <button id="comments-close" title="Close">✕</button>
+                </div>
+                <div id="comments-list" class="comments-list"></div>
+                <form id="comment-form" class="comment-form">
+                    <input id="comment-input" type="text" placeholder="Add a comment..." maxlength="300" />
+                    <button id="comment-post" type="submit">Post</button>
+                </form>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
