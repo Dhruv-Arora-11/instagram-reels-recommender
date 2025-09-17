@@ -2,6 +2,10 @@
 
 This project is a content-based recommendation system that suggests short videos to users. It leverages unsupervised machine learning to group similar videos into clusters and recommends popular items from a video's own cluster.
 
+# Demo image of the project:
+
+<img width="1918" height="1199" alt="image" src="https://github.com/user-attachments/assets/2c710982-86e9-4fb0-882e-bf624c0dbfd2" />
+
 ---
 
 ## 🚀 Key Features
@@ -31,3 +35,12 @@ The recommendation workflow is as follows:
 * `*.pkl`: Saved (pickled) files for the trained preprocessor pipeline, DBSCAN model, and cluster centroids.
 * `*.npy`: Saved NumPy array of the transformed data.
 * `*.csv`: The source data and generated cluster mappings.
+
+
+# To run the project :
+
+1. **Turn on the backend** : Go to the app folder by cd app , then turn on the backend using the command `uvicorn backend:app --reload`
+2. **Turn on the frontend** : Go to frontend forlder and then go live using the Live server extension in the vs code (recomended).
+3. **Password of Dataset** : There is a password on the dataset , `username` : videodata and `password` : ShortVideo@10000
+
+   Now you are good to go .
