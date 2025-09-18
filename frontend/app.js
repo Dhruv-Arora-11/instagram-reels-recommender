@@ -1,7 +1,5 @@
 (() => {
-  const API_BASE = (location.hostname === 'localhost' || location.hostname === '127.0.0.1')
-      ? `${location.protocol}//${location.hostname}:8000`
-      : `${location.origin}`;
+  const API_BASE = 'https://instagram-reels-recommender.onrender.com';
 
   const els = {
       authSection: document.getElementById('auth-section'),
