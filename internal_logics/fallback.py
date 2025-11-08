@@ -1,10 +1,15 @@
 from sklearn.metrics import pairwise_distances
 import numpy as np
 
-def predict_with_fallback(preprocessor_pipeline, centroids_df , fav_clusters_latest):
+def predict_with_fallback(preprocessor_pipeline, centroids_df , fav_clusters_latest, raw_point):
     
     # CORRECT FILTERING SYNTAX (Filters by Index, not Column)
     centroids_df = centroids_df[centroids_df.index.isin(fav_clusters_latest)]
+    
+    # Transform the raw input point using the provided preprocessor pipeline
+    if preprocessor_pipeline is None:
+        raise ValueError("preprocessor_pipeline must be provided to transform raw_point")
+    transformed_point = preprocessor_pipeline.transform([raw_point])
     
     distances = pairwise_distances(transformed_point, centroids_df.values)
     
