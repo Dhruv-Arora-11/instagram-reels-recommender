@@ -25,6 +25,7 @@ phases:
       - echo "Running FastAPI application checks..."
       - python -c "import fastapi; import uvicorn; print('FastAPI configuration valid')"
       - echo "Copying necessary model files..."
+      - mkdir -p deployment
       - cp modelling/transformed_data_for_dbscan.npy ./deployment/
       - cp video_clusters.csv ./deployment/
       - echo "Zipping deployment package..."
