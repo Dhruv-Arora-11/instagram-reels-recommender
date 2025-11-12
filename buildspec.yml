@@ -34,7 +34,7 @@ phases:
 
 artifacts:
   files:
-    # This tells CodeBuild to save the zip file
+    # This tells CodeBuild to save the zip file 111
     - predictor-service.zip
   name: MyReelPredictorService
   discard-paths: no
