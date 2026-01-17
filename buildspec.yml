@@ -30,7 +30,7 @@ phases:
       - cp video_clusters.csv ./deployment/
       - echo "Zipping deployment package..."
       # This zips all files (except .git, tests, and notebooks) into a package
-      - zip -r predictor-service.zip . -x "*.git*" "*.ipynb" "*__pycache__*" "*.pytest_cache*"
+      - zip -r deployment/predictor-service.zip . -x "*.git*" "*.ipynb" "*__pycache__*" "*.pytest_cache*"
 
 artifacts:
   base-directory: deployment
