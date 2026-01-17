@@ -33,6 +33,6 @@ phases:
       - zip -r predictor-service.zip . -x "*.git*" "*.ipynb" "*__pycache__*" "*.pytest_cache*"
 
 artifacts:
+  base-directory: deployment
   files:
-  - "**/*"
- 
+    - '**/*'
