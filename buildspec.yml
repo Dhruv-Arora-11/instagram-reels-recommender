@@ -34,8 +34,5 @@ phases:
 
 artifacts:
   files:
-    # This tells CodeBuild to save the zip file 
-    # this comment is for testnig if the codebuild is triggering when there is a push or not
-    - predictor-service.zip
-  name: MyReelPredictorService
-  discard-paths: no
+  - "**/*"
+ 
