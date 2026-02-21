@@ -1,0 +1,44 @@
+version: 0.2
+
+phases:
+  install:
+    runtime-versions:
+      # Specify the Python version your project uses
+      python: 3.11 
+    commands:
+      - echo "Installing system dependencies..."
+      - apt-get update && apt-get install -y zip unzip
+      - echo "Installing Python dependencies..."
+      - pip install --upgrade pip
+      - pip install -r requirements.txt
+      # Install development and testing dependencies
+      - pip install pytest numpy scikit-learn
+
+  pre_build:
+    commands:
+      - echo "Skipping tests (no test files found)"
+ 
+
+  build:
+    commands:
+      - echo "Build started on `date`"
+      - echo "Running FastAPI application checks..."
+      - python -c "import fastapi; import uvicorn; print('FastAPI configuration valid')"
+      - echo "Copying necessary model files..."
+      - mkdir -p deployment
+      - cp transformed_data_for_dbscan.npy ./deployment/
+      - cp video_clusters.csv ./deployment/
+      - echo "Zipping deployment package..."
+      # This zips all files (except .git, tests, and notebooks) into a package
+      - zip -r deployment/predictor-service.zip . -x "*.git*" "*.ipynb" "*__pycache__*" "*.pytest_cache*"
+
+artifacts:
+  base-directory: deployment
+  files:
+    - '**/*'
+
+
+#  hey there , this is for checking if the auto build in codebuild will run the build , if I push this comment 
+# this is for testing
+#this is for the testing purposes (prev was done without ssaveing the updates in the codebuildz)
+# this is for another testing

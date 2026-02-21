@@ -1,0 +1,56 @@
+# Updated to support Flutter Web Build and Deployment
+name: Project CI/CD
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  # Job 1: Check Python Backend
+  python-analysis:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+      - name: Install dependencies
+        run: |
+          cd backend-ml
+          pip install -r requirements.txt
+      - name: Run Linting
+        run: |
+          pip install flake8
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+
+  # Job 2: Build and Deploy Flutter Web
+  flutter-web-build:    
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+      
+      - name: Install Flutter dependencies
+        run: |
+          cd frontend_reels
+          flutter pub get
+      
+      - name: Run Flutter Web Build
+        run: |
+          cd frontend_reels
+          flutter build web --release --base-href /
+
+      # If you want to auto-deploy to Firebase Hosting, uncomment below
+      - name: Deploy to Firebase Hosting
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT }}'
+          projectId: your-project-id
+          channelId: live 

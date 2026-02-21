@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>ReelAI</title>
+
+<style>
+body {
+    margin: 0;
+    background: black;
+    overflow: hidden;
+}
+
+/* Scroll container */
+#reelsContainer {
+    height: 100vh;
+    overflow-y: scroll;
+    scroll-snap-type: y mandatory;
+}
+
+/* Each Reel */
+.reel {
+    height: 100vh;
+    width: 100%;
+    scroll-snap-align: start;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Video fit properly */
+video {
+    max-height: 100vh;
+    max-width: 100vw;
+    object-fit: contain;
+    background: black;
+}
+
+/* Like section */
+.overlay {
+    position: absolute;
+    right: 20px;
+    bottom: 120px;
+    color: white;
+    text-align: center;
+}
+
+.like-btn {
+    font-size: 40px;
+    cursor: pointer;
+}
+
+.like-count {
+    margin-top: 5px;
+    font-size: 18px;
+}
+
+/* Mute button */
+.mute-btn {
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+    font-size: 30px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0.6);
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 50%;
+    width: 50px;
+    height: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: 0.2s;
+}
+
+.mute-btn:hover {
+    background: rgba(0, 0, 0, 0.8);
+}
+
+/* Username modal */
+#usernameModal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    z-index: 10;
+}
+
+#usernameModal input {
+    padding: 10px;
+    font-size: 16px;
+}
+
+#usernameModal button {
+    padding: 10px 20px;
+    margin-top: 10px;
+    background: #ff0050;
+    border: none;
+    color: white;
+    cursor: pointer;
+}
+</style>
+</head>
+
+<body>
+
+<!-- Username Modal -->
+<div id="usernameModal">
+    <h2 style="color:white;">Enter Your Name</h2>
+    <input type="text" id="username">
+    <button onclick="startApp()">Start</button>
+</div>
+
+<div id="reelsContainer"></div>
+
+<script>
+
+let loading = false;
+
+/* Start session */
+async function startApp() {
+
+    const username = document.getElementById("username").value;
+    if (!username.trim()) return;
+
+    await fetch("/start_session", {
+        method: "POST",
+        headers: {"Content-Type": "application/json"},
+        body: JSON.stringify({username})
+    });
+
+    document.getElementById("usernameModal").style.display = "none";
+
+    loadReel();
+    loadReel();
+}
+
+/* Load reel */
+async function loadReel() {
+
+    if (loading) return;
+    loading = true;
+
+    try {
+        const res = await fetch("/get_next_reel");
+        const data = await res.json();
+
+        const reel = document.createElement("div");
+        reel.className = "reel";
+        // Attach cluster to reel for correct like attribution
+        reel.dataset.cluster = data.cluster;
+        reel.dataset.videoId = data.video_id;
+
+        reel.innerHTML = `
+            <video src="${data.video_url}" autoplay muted loop playsinline></video>
+            <button class="mute-btn" onclick="toggleMute(this)">🔇</button>
+            <div class="overlay">
+                <div class="like-btn" onclick="like(this)">❤️</div>
+                <div class="like-count">0</div>
+            </div>
+        `;
+
+        const container = document.getElementById("reelsContainer");
+        container.appendChild(reel);
+
+        // Observe last reel for scroll-to-load
+        observeLastReel();
+    } catch (err) {
+        console.error("Error loading reel:", err);
+    }
+
+    loading = false;
+}
+
+/* Like toggle */
+async function like(btn) {
+    const reel = btn.closest('.reel');
+    if (!reel) {
+        console.error('Could not find reel element');
+        return;
+    }
+
+    const cluster = reel.dataset.cluster;
+    const countDiv = btn.nextElementSibling;
+    let count = parseInt(countDiv.innerText);
+
+    if (btn.classList.contains("liked")) {
+        btn.classList.remove("liked");
+        btn.style.color = "white";
+        countDiv.innerText = count - 1;
+    } else {
+        btn.classList.add("liked");
+        btn.style.color = "red";
+        countDiv.innerText = count + 1;
+
+        try {
+            const res = await fetch("/like", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({cluster: parseInt(cluster)})
+            });
+            const data = await res.json();
+            console.log('Like response:', data);
+        } catch (err) {
+            console.error('Like error:', err);
+        }
+    }
+}
+
+/* Toggle mute/unmute */
+function toggleMute(btn) {
+    const reel = btn.closest('.reel');
+    if (!reel) return;
+
+    const video = reel.querySelector('video');
+    if (!video) return;
+
+    video.muted = !video.muted;
+    btn.textContent = video.muted ? '🔇' : '🔊';
+}
+
+/* Use IntersectionObserver to load next reel when last reel is visible */
+let observer = null;
+function observeLastReel() {
+    const container = document.getElementById('reelsContainer');
+    const reels = container.getElementsByClassName('reel');
+    if (reels.length === 0) return;
+
+    const lastReel = reels[reels.length - 1];
+
+    // Disconnect previous observer
+    if (observer) observer.disconnect();
+
+    observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting && entry.intersectionRatio > 0.5) {
+                loadReel();
+            }
+        });
+    }, {
+        root: container,
+        threshold: [0.5]
+    });
+
+    observer.observe(lastReel);
+}
+
+/* Fallback: Infinite scroll */
+document.getElementById("reelsContainer").addEventListener("scroll", function () {
+    if (this.scrollTop + this.clientHeight >= this.scrollHeight - 5) {
+        loadReel();
+    }
+});
+
+</script>
+
+</body>
+</html>
