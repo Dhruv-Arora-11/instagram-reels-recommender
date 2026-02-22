@@ -6,6 +6,7 @@ This project is a content-based recommendation system that suggests short videos
 
 <img width="1918" height="1199" alt="image" src="https://github.com/user-attachments/assets/2c710982-86e9-4fb0-882e-bf624c0dbfd2" />
 
+
 ---
 
 ## 🚀 Key Features
